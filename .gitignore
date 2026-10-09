@@ -1,0 +1,26 @@
+# Windows system files
+desktop.ini
+Thumbs.db
+ehthumbs.db
+[Dd]esktop.ini
+
+# User-specific developer files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# IDE / Editor caches
+.vs/
+.vscode/
+.idea/
+
+# Build caches & subdirectories
+bin/
+obj/
+[Bb]uild/
+
+# Logs and crash dumps
+*.log
+*.dmp
