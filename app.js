@@ -187,17 +187,30 @@ const Particles = (() => {
 // ── Core: Base Conversion Engine ──
 const BaseEngine = (() => {
     const HEX_CHARS = '0123456789ABCDEF';
+    const SUPPORTED_BASES = new Set([2, 8, 10, 16]);
+    const BASE_NAMES = { 2: 'Binary', 8: 'Octal', 10: 'Decimal', 16: 'Hexadecimal' };
 
     function validate(value, base) {
-        if (!value || value.trim() === '') return { valid: false, error: 'Please enter a number.' };
+        if (!SUPPORTED_BASES.has(base)) {
+            return { valid: false, error: 'Unsupported number base.' };
+        }
+
+        if (!value || value.trim() === '') {
+            return { valid: false, error: 'Please enter a number.' };
+        }
+
         const v = value.trim().toUpperCase();
+        const digits = v[0] === '-' || v[0] === '+' ? v.slice(1) : v;
         const validChars = HEX_CHARS.slice(0, base);
-        for (let i = 0; i < v.length; i++) {
-            if (!validChars.includes(v[i])) {
-                const baseNames = { 2: 'Binary', 8: 'Octal', 10: 'Decimal', 16: 'Hexadecimal' };
+        if (digits.length === 0) {
+            return { valid: false, error: 'Please enter at least one digit.' };
+        }
+
+        for (let i = 0; i < digits.length; i++) {
+            if (!validChars.includes(digits[i])) {
                 return {
                     valid: false,
-                    error: `Invalid digit "${v[i]}" for ${baseNames[base]} (Base ${base}). Valid digits: ${validChars.split('').join(', ')}`
+                    error: `Invalid digit "${digits[i]}" for ${BASE_NAMES[base]} (Base ${base}). Valid digits: ${validChars.split('').join(', ')}`
                 };
             }
         }
@@ -206,30 +219,34 @@ const BaseEngine = (() => {
 
     function toDecimal(value, fromBase) {
         const v = value.trim().toUpperCase();
-        let decimal = 0;
+        const isNegative = v.startsWith('-');
+        const digits = v.replace(/^[+-]/, '');
+        let decimal = 0n;
         const steps = [];
 
+        for (const digit of digits) {
+            decimal = decimal * BigInt(fromBase) + BigInt(HEX_CHARS.indexOf(digit));
+        }
+        if (isNegative) decimal = -decimal;
+
         if (fromBase === 10) {
-            decimal = parseInt(v, 10);
             steps.push(`<strong>${v}</strong> is already in <span class="highlight">Decimal</span>.`);
             return { decimal, steps };
         }
 
-        const baseNames = { 2: 'Binary', 8: 'Octal', 16: 'Hexadecimal' };
-        const digits = v.split('');
-        const len = digits.length;
+        const unsignedDigits = digits.split('');
+        const len = unsignedDigits.length;
         const terms = [];
 
-        digits.forEach((d, i) => {
+        unsignedDigits.forEach((d, i) => {
             const digitVal = HEX_CHARS.indexOf(d);
             const power = len - 1 - i;
-            const contribution = digitVal * Math.pow(fromBase, power);
-            decimal += contribution;
+            const contribution = BigInt(digitVal) * BigInt(fromBase) ** BigInt(power);
             terms.push(`${d}×${fromBase}<sup>${power}</sup>`);
         });
 
         steps.push(
-            `Convert <span class="highlight">${v}</span> from <strong>${baseNames[fromBase]}</strong> to Decimal:`
+            `Convert <span class="highlight">${v}</span> from <strong>${BASE_NAMES[fromBase]}</strong> to Decimal:`
         );
         steps.push(`${terms.join(' + ')} = <span class="highlight">${decimal}</span>`);
 
@@ -237,28 +254,31 @@ const BaseEngine = (() => {
     }
 
     function fromDecimal(decimal, toBase) {
-        if (decimal === 0) return { result: '0', steps: [`<span class="highlight">0</span> in any base is <span class="highlight">0</span>.`] };
-
-        const baseNames = { 2: 'Binary', 8: 'Octal', 10: 'Decimal', 16: 'Hexadecimal' };
-        const steps = [];
-        const isNegative = decimal < 0;
-        let num = Math.abs(decimal);
-
-        if (toBase === 10) {
-            return { result: decimal.toString(), steps: [`Result in Decimal: <span class="highlight">${decimal}</span>`] };
+        const integer = typeof decimal === 'bigint' ? decimal : BigInt(decimal);
+        if (integer === 0n) {
+            return { result: '0', steps: [`<span class="highlight">0</span> in any base is <span class="highlight">0</span>.`] };
         }
 
-        steps.push(`Convert <span class="highlight">${decimal}</span> from Decimal to <strong>${baseNames[toBase]}</strong>:`);
+        const steps = [];
+        const isNegative = integer < 0n;
+        let num = isNegative ? -integer : integer;
+
+        if (toBase === 10) {
+            return { result: integer.toString(), steps: [`Result in Decimal: <span class="highlight">${integer}</span>`] };
+        }
+
+        steps.push(`Convert <span class="highlight">${integer}</span> from Decimal to <strong>${BASE_NAMES[toBase]}</strong>:`);
 
         const remainders = [];
         const divSteps = [];
         let current = num;
+        const base = BigInt(toBase);
 
-        while (current > 0) {
-            const rem = current % toBase;
-            const quotient = Math.floor(current / toBase);
+        while (current > 0n) {
+            const rem = current % base;
+            const quotient = current / base;
             divSteps.push(`${current} ÷ ${toBase} = ${quotient} remainder <span class="highlight">${HEX_CHARS[rem]}</span>`);
-            remainders.unshift(HEX_CHARS[rem]);
+            remainders.unshift(HEX_CHARS[Number(rem)]);
             current = quotient;
         }
 
@@ -620,11 +640,11 @@ function doCalculate() {
             case '-': result = result - nextVal; break;
             case '*': result = result * nextVal; break;
             case '/':
-                if (nextVal === 0) {
+                if (nextVal === 0n) {
                     showError('Cannot divide by zero!');
                     return;
                 }
-                result = Math.floor(result / nextVal);
+                result = result / nextVal;
                 break;
         }
     }

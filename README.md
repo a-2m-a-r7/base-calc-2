@@ -1,73 +1,53 @@
-# Base Calculator & Number Systems Converter
+# BaseCalc2 — Base Calculator & Number Systems Converter
 
-[![Platform](https://img.shields.io/badge/Platform-Windows-0078D6?logo=windows&logoColor=white)](https://microsoft.com)
-[![Runtime](https://img.shields.io/badge/.NET-9.0-512BD4?logo=dotnet&logoColor=white)](https://dotnet.microsoft.com/)
-[![Framework](https://img.shields.io/badge/Framework-WPF-blue)](https://docs.microsoft.com/dotnet/desktop/wpf/)
+[![Deployment](https://img.shields.io/badge/Deployment-Vercel-black?logo=vercel)](https://vercel.com/)
+[![Frontend](https://img.shields.io/badge/Frontend-HTML%20%7C%20CSS%20%7C%20JavaScript-E34F26)](https://developer.mozilla.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-A modern Windows desktop application for converting between numerical bases (Binary, Octal, Decimal, Hexadecimal) and performing chained multi-operand arithmetic calculations across mixed numbering systems.
-
----
+A modern web application for converting between Binary, Octal, Decimal, and Hexadecimal and performing chained multi-operand arithmetic calculations across mixed numbering systems.
 
 ## Features
 
-- **Multi-Base Conversions:** Seamlessly convert values between Binary (Base 2), Octal (Base 8), Decimal (Base 10), and Hexadecimal (Base 16).
-- **Chained Arithmetic Operations:** Support for multi-operand calculations with customizable operators (`+`, `-`, `*`, `/`) and independent input base selection.
-- **Simultaneous All-Base Output:** Instantly visualizes computed results in all 4 primary numerical bases.
-- **Step-by-Step Solution Breakdown:** Displays detailed mathematical calculation steps for verification and learning.
-- **Session History:** Keeps a log of past calculations with a one-click history clearing option.
-- **Included Video Demo:** Pre-packaged video demonstration showcasing the user interface and functionality.
-
----
+- **Multi-Base Conversions:** Convert values between Binary (Base 2), Octal (Base 8), Decimal (Base 10), and Hexadecimal (Base 16).
+- **Chained Arithmetic Operations:** Perform multi-operand calculations with customizable operators (`+`, `-`, `*`, `/`) and independent input bases.
+- **Simultaneous All-Base Output:** View every result in all four supported bases.
+- **Exact Integer Arithmetic:** Uses JavaScript `BigInt` internally, so large integer conversions and calculations do not lose precision.
+- **Step-by-Step Solution Breakdown:** Displays detailed mathematical steps for verification and learning.
+- **Session History:** Keeps a log of past calculations with one-click history clearing.
 
 ## Tech Stack
 
-- **Language:** C#
-- **UI Framework:** WPF (Windows Presentation Foundation)
-- **Target Runtime:** .NET 9.0 Desktop Runtime (`Microsoft.WindowsDesktop.App`)
-- **OS Support:** Windows 10 / Windows 11
-
----
+- **Frontend:** Semantic HTML, modern CSS, and vanilla JavaScript
+- **Deployment:** Vercel static hosting
+- **Arithmetic:** Native JavaScript `BigInt` for exact integer results
 
 ## Getting Started
 
-### Prerequisites
-
-Ensure you have the [.NET 9.0 Desktop Runtime](https://dotnet.microsoft.com/download/dotnet/9.0) installed on your Windows machine.
-
-### Running the Application
+### Running Locally
 
 1. Clone or download this repository.
-2. Launch `WpfApp2.exe` directly from the project directory.
+2. Open `index.html` in a browser, or serve the folder with any static HTTP server.
 
 ```powershell
-.\WpfApp2.exe
+python -m http.server 8080
 ```
 
----
+Then open `http://localhost:8080`.
 
 ## Repository Structure
 
 ```text
 BaseCalc2/
-├── index.html                           # Modern Web Application entry point
-├── style.css                            # Glassmorphism UI design & styles
-├── app.js                               # Converter logic & Web Audio / animations
-├── assets/                              # High-resolution Innovation University branding
+├── index.html                           # Web application entry point
+├── style.css                            # Glassmorphism UI styles
+├── app.js                               # Converter, calculator, audio, and animation logic
+├── assets/                              # Innovation University branding
 ├── vercel.json                          # Vercel deployment configuration
-├── WpfApp2.exe                          # Desktop application executable launcher
-├── WpfApp2.dll                          # Main compiled WPF application assembly
-├── WpfApp2.runtimeconfig.json           # .NET 9.0 runtime configuration
-├── WpfApp2.deps.json                    # Dependency mapping
-├── WpfApp2.pdb                          # Debug symbol database
-├── Whisk_aznihtojbzmxugmw0co2mwytazyhrtl5uwmw0sm.mp4  # Application video preview
 ├── .gitignore                           # Git ignore rules
 ├── LICENSE                              # MIT License
 └── README.md                            # Documentation
 ```
 
----
-
 ## License
 
-This project is licensed under the [MIT License](LICENSE) - see the LICENSE file for details.
+This project is licensed under the [MIT License](LICENSE) - see the [LICENSE](LICENSE) file.
