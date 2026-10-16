@@ -50,7 +50,12 @@ Ensure you have the [.NET 9.0 Desktop Runtime](https://dotnet.microsoft.com/down
 
 ```text
 BaseCalc2/
-├── WpfApp2.exe                          # Application executable launcher
+├── index.html                           # Modern Web Application entry point
+├── style.css                            # Glassmorphism UI design & styles
+├── app.js                               # Converter logic & Web Audio / animations
+├── assets/                              # High-resolution Innovation University branding
+├── vercel.json                          # Vercel deployment configuration
+├── WpfApp2.exe                          # Desktop application executable launcher
 ├── WpfApp2.dll                          # Main compiled WPF application assembly
 ├── WpfApp2.runtimeconfig.json           # .NET 9.0 runtime configuration
 ├── WpfApp2.deps.json                    # Dependency mapping

@@ -24,3 +24,5 @@ obj/
 # Logs and crash dumps
 *.log
 *.dmp
+
+.vercel

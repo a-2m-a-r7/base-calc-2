@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BaseCalc2 | Innovation University - Number Systems Converter</title>
+    <meta name="description" content="A modern base calculator and number systems converter. Convert between Binary, Octal, Decimal, and Hexadecimal with step-by-step solutions.">
+    <meta name="keywords" content="base converter, number systems, binary, octal, decimal, hexadecimal, calculator, Innovation University">
+    <meta name="author" content="Innovation University">
+    <meta name="theme-color" content="#4A3B8F">
+    <link rel="icon" type="image/svg+xml" href="assets/innovation-emblem-badge.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="loading-screen">
+        <div class="loading-content">
+            <div class="loading-logo">
+                <img src="assets/innovation-university.svg" alt="Innovation University" class="loading-logo-img">
+            </div>
+            <div class="loading-bar">
+                <div class="loading-bar-fill"></div>
+            </div>
+            <p class="loading-text">Loading BaseCalc2...</p>
+        </div>
+    </div>
+
+    <!-- Floating Particles Background -->
+    <canvas id="particles-canvas"></canvas>
+
+    <!-- Confetti Canvas -->
+    <canvas id="confetti-canvas"></canvas>
+
+    <!-- Main App -->
+    <div id="app" class="app hidden">
+        <!-- Header -->
+        <header class="header" id="header">
+            <div class="header-content">
+                <div class="header-left">
+                    <div class="logo-wrapper" id="logo-wrapper">
+                        <img src="assets/innovation-emblem-badge.svg" alt="Innovation University" class="header-logo-img">
+                        <div class="logo-text">
+                            <span class="logo-title">Innovation University</span>
+                            <span class="logo-subtitle">BaseCalc2 — Number Systems Converter</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="header-right">
+                    <button class="theme-toggle" id="theme-toggle" title="Toggle Light/Dark Mode" aria-label="Toggle theme">
+                        <span class="theme-icon moon">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                        </span>
+                        <span class="theme-icon sun">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Tabs -->
+            <div class="tabs-container">
+                <div class="tabs" id="tabs">
+                    <button class="tab active" data-tab="converter" id="tab-converter">
+                        <svg class="tab-svg-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 014-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 01-4 4H3"/></svg>
+                        <span class="tab-label">Converter</span>
+                    </button>
+                    <button class="tab" data-tab="calculator" id="tab-calculator">
+                        <svg class="tab-svg-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="10" x2="10" y2="10"/><line x1="14" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="10" y2="14"/><line x1="14" y1="14" x2="16" y2="14"/><line x1="8" y1="18" x2="10" y2="18"/><line x1="14" y1="18" x2="16" y2="18"/></svg>
+                        <span class="tab-label">Calculator</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Converter Panel -->
+            <section class="panel active" id="panel-converter">
+                <div class="glass-card converter-card">
+                    <h2 class="card-title">Base Converter</h2>
+                    <div class="input-group">
+                        <label class="input-label" for="conv-input">Enter Number</label>
+                        <div class="input-wrapper">
+                            <input type="text" id="conv-input" class="text-input mono" placeholder="e.g. 1010, FF, 255..." autocomplete="off" spellcheck="false">
+                            <button class="input-clear" id="conv-clear" title="Clear input">&times;</button>
+                        </div>
+                    </div>
+                    <div class="base-selectors">
+                        <div class="input-group">
+                            <label class="input-label" for="conv-from-base">From Base</label>
+                            <select id="conv-from-base" class="select-input">
+                                <option value="2">Binary (Base 2)</option>
+                                <option value="8">Octal (Base 8)</option>
+                                <option value="10" selected>Decimal (Base 10)</option>
+                                <option value="16">Hexadecimal (Base 16)</option>
+                            </select>
+                        </div>
+                        <button class="swap-btn" id="swap-bases" title="Swap bases">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M7 16l-4-4 4-4"/>
+                                <path d="M17 8l4 4-4 4"/>
+                                <line x1="3" y1="12" x2="21" y2="12"/>
+                            </svg>
+                        </button>
+                        <div class="input-group">
+                            <label class="input-label" for="conv-to-base">To Base</label>
+                            <select id="conv-to-base" class="select-input">
+                                <option value="2" selected>Binary (Base 2)</option>
+                                <option value="8">Octal (Base 8)</option>
+                                <option value="10">Decimal (Base 10)</option>
+                                <option value="16">Hexadecimal (Base 16)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary btn-convert" id="btn-convert">Convert</button>
+                </div>
+            </section>
+
+            <!-- Calculator Panel -->
+            <section class="panel" id="panel-calculator">
+                <div class="glass-card calculator-card">
+                    <h2 class="card-title">Multi-Base Calculator</h2>
+                    <div id="operands-container">
+                        <div class="operand-row" data-index="0">
+                            <div class="input-group operand-input-group">
+                                <label class="input-label">Operand 1</label>
+                                <input type="text" class="text-input mono operand-value" placeholder="e.g. 1010" autocomplete="off" spellcheck="false">
+                            </div>
+                            <div class="input-group operand-base-group">
+                                <label class="input-label">Base</label>
+                                <select class="select-input operand-base">
+                                    <option value="2">BIN</option>
+                                    <option value="8">OCT</option>
+                                    <option value="10" selected>DEC</option>
+                                    <option value="16">HEX</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="operator-row">
+                            <select class="select-input operator-select">
+                                <option value="+">+ Add</option>
+                                <option value="-">- Subtract</option>
+                                <option value="*">× Multiply</option>
+                                <option value="/">÷ Divide</option>
+                            </select>
+                        </div>
+                        <div class="operand-row" data-index="1">
+                            <div class="input-group operand-input-group">
+                                <label class="input-label">Operand 2</label>
+                                <input type="text" class="text-input mono operand-value" placeholder="e.g. FF" autocomplete="off" spellcheck="false">
+                            </div>
+                            <div class="input-group operand-base-group">
+                                <label class="input-label">Base</label>
+                                <select class="select-input operand-base">
+                                    <option value="2">BIN</option>
+                                    <option value="8">OCT</option>
+                                    <option value="10" selected>DEC</option>
+                                    <option value="16">HEX</option>
+                                </select>
+                            </div>
+                            <button class="remove-operand-btn" title="Remove operand" style="visibility: hidden;">&times;</button>
+                        </div>
+                    </div>
+                    <div class="calc-actions">
+                        <button class="btn btn-secondary" id="btn-add-operand">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                            Add Operand
+                        </button>
+                        <button class="btn btn-primary btn-convert" id="btn-calculate">Calculate</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Error Message -->
+            <div class="error-container hidden" id="error-container">
+                <div class="glass-card error-card">
+                    <svg class="error-svg-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                    <p class="error-message" id="error-message"></p>
+                </div>
+            </div>
+
+            <!-- Results Section -->
+            <section class="results-section hidden" id="results-section">
+                <div class="glass-card results-card">
+                    <h2 class="card-title">Results</h2>
+                    <div class="results-grid">
+                        <div class="result-item" data-base="2">
+                            <div class="result-header">
+                                <span class="result-badge bin">BIN</span>
+                                <span class="result-label">Binary (Base 2)</span>
+                            </div>
+                            <div class="result-value-wrapper">
+                                <span class="result-value mono" id="result-bin">—</span>
+                                <button class="copy-btn" data-target="result-bin" title="Copy">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="result-item" data-base="8">
+                            <div class="result-header">
+                                <span class="result-badge oct">OCT</span>
+                                <span class="result-label">Octal (Base 8)</span>
+                            </div>
+                            <div class="result-value-wrapper">
+                                <span class="result-value mono" id="result-oct">—</span>
+                                <button class="copy-btn" data-target="result-oct" title="Copy">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="result-item" data-base="10">
+                            <div class="result-header">
+                                <span class="result-badge dec">DEC</span>
+                                <span class="result-label">Decimal (Base 10)</span>
+                            </div>
+                            <div class="result-value-wrapper">
+                                <span class="result-value mono" id="result-dec">—</span>
+                                <button class="copy-btn" data-target="result-dec" title="Copy">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="result-item" data-base="16">
+                            <div class="result-header">
+                                <span class="result-badge hex">HEX</span>
+                                <span class="result-label">Hexadecimal (Base 16)</span>
+                            </div>
+                            <div class="result-value-wrapper">
+                                <span class="result-value mono" id="result-hex">—</span>
+                                <button class="copy-btn" data-target="result-hex" title="Copy">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Steps Section -->
+            <section class="steps-section hidden" id="steps-section">
+                <div class="glass-card steps-card">
+                    <button class="steps-toggle" id="steps-toggle">
+                        <h2 class="card-title">Step-by-Step Solution</h2>
+                        <span class="toggle-arrow" id="toggle-arrow">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+                        </span>
+                    </button>
+                    <div class="steps-content" id="steps-content">
+                        <!-- Steps will be injected here by JS -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- History Section -->
+            <section class="history-section" id="history-section">
+                <div class="glass-card history-card">
+                    <div class="history-header">
+                        <h2 class="card-title">History</h2>
+                        <button class="btn btn-ghost" id="btn-clear-history">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
+                            Clear All
+                        </button>
+                    </div>
+                    <div class="history-list" id="history-list">
+                        <div class="history-empty" id="history-empty">
+                            <svg class="empty-svg-icon" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.4"><path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.45 5.11L2 12v6a2 2 0 002 2h16a2 2 0 002-2v-6l-3.45-6.89A2 2 0 0016.76 4H7.24a2 2 0 00-1.79 1.11z"/></svg>
+                            <p>No calculations yet. Start converting!</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Keyboard Shortcuts Info -->
+            <section class="shortcuts-section">
+                <div class="glass-card shortcuts-card">
+                    <h3 class="shortcuts-title">Keyboard Shortcuts</h3>
+                    <div class="shortcuts-grid">
+                        <div class="shortcut-item"><kbd>Enter</kbd><span>Convert / Calculate</span></div>
+                        <div class="shortcut-item"><kbd>Ctrl+1</kbd><span>Converter Tab</span></div>
+                        <div class="shortcut-item"><kbd>Ctrl+2</kbd><span>Calculator Tab</span></div>
+                        <div class="shortcut-item"><kbd>Ctrl+L</kbd><span>Clear Input</span></div>
+                        <div class="shortcut-item"><kbd>Ctrl+H</kbd><span>Clear History</span></div>
+                        <div class="shortcut-item"><kbd>Ctrl+D</kbd><span>Toggle Theme</span></div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <img src="assets/innovation-emblem-badge.svg" alt="Innovation University" class="footer-logo-img">
+                    <span>Innovation University</span>
+                </div>
+                <p class="footer-text">BaseCalc2 &copy; 2026 — Number Systems Converter</p>
+                <div class="footer-links">
+                    <a href="https://github.com" target="_blank" rel="noopener" class="footer-link">GitHub</a>
+                    <span class="footer-separator">&middot;</span>
+                    <a href="#" class="footer-link">Documentation</a>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast hidden" id="toast">
+        <svg class="toast-svg-icon" id="toast-svg-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>
+        <span class="toast-message" id="toast-message"></span>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
